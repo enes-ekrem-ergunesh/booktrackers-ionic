@@ -1,0 +1,26 @@
+# export db from docker to the current dir (db structure only)
+sudo docker exec -it bti13 /bin/bash # connect to the container
+
+mysqldump -p --no-data main > /home/bti.sql # export to home dir
+
+sudo docker cp bti13:/home/bti.sql ./ # copy the exported data to the current directory
+
+--------------------------------------
+
+# create a new mysql container
+sudo docker run -d --name bti13 -p 3313:3306 -e MYSQL_ROOT_PASSWORD=ewq123 mysql:8.4.3
+
+--------------------------------------
+
+# import db from the current dir to docker
+sudo docker cp ./bti.sql bti13:/home # copy the .sql file to the container
+
+sudo docker exec -it bti13 /bin/bash # connect to the container
+
+mysql -u root -p # open mysql shell
+
+CREATE SCHEMA main; # create new schema
+
+mysql -u root -p main < /home/bti.sql # import data from the file to the schema
+
+# For Windows: sudo commands should be deleted, and the path should be changed to the Windows format.
